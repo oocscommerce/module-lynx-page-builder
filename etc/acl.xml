@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="OOCS_LynxPageBuilder::manage" title="Lynx Page Builder" sortOrder="100">
+                    <!-- Saving is its own permission: a role may look at a page in the editor without changing it. -->
+                    <resource id="OOCS_LynxPageBuilder::save" title="Save Layout" sortOrder="10"/>
+                    <!-- Share links open a design to anyone holding the link and password, so they are gated separately. -->
+                    <resource id="OOCS_LynxPageBuilder::share" title="Share Preview" sortOrder="20"/>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="OOCS_LynxPageBuilder::config_pagebuilder" title="Lynx Theme Settings Section" translate="title" />
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

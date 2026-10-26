@@ -1,0 +1,12 @@
+<?php
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var \Magento\Framework\View\Element\Template $block */
+$css = $block->getData('view_model')->getCss();
+?>
+<?php if ($css !== ''): ?>
+<style><?= /* @noEscape */ $css ?></style>
+<?php endif; ?>

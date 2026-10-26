@@ -1,0 +1,483 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="OOCS\LynxPageBuilder\Api\LayoutRepositoryInterface" type="OOCS\LynxPageBuilder\Model\LayoutRepository"/>
+	<preference for="OOCS\LynxPageBuilder\Api\Data\LayoutInterface" type="OOCS\LynxPageBuilder\Model\Layout"/>
+	<preference for="OOCS\LynxPageBuilder\Api\Data\LayoutSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<preference for="OOCS\LynxPageBuilder\Api\DesignRepositoryInterface" type="OOCS\LynxPageBuilder\Model\DesignRepository"/>
+
+	<type name="Magento\Framework\Console\CommandList">
+		<arguments>
+			<argument name="commands" xsi:type="array">
+				<item name="lynxPagebuilderBuild" xsi:type="object">OOCS\LynxPageBuilder\Console\Command\Build</item>
+			</argument>
+		</arguments>
+	</type>
+
+	<!-- Data source of the design grid: the collection, read through the UI framework. -->
+	<virtualType name="LynxPagebuilderDesignGridDataSource"
+	             type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">lynx_pagebuilder_design</argument>
+			<argument name="resourceModel" xsi:type="string">OOCS\LynxPageBuilder\Model\ResourceModel\Design</argument>
+		</arguments>
+	</virtualType>
+	<!-- Data source of the layout grid (the rows of one design). -->
+	<virtualType name="LynxPagebuilderLayoutGridDataSource"
+	             type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">lynx_pagebuilder_layout</argument>
+			<argument name="resourceModel" xsi:type="string">OOCS\LynxPageBuilder\Model\ResourceModel\Layout</argument>
+		</arguments>
+	</virtualType>
+	<!-- Registered globally although only the admin grid reads it: an adminhtml-scoped `collections` would replace core's. -->
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="lynx_pagebuilder_design_listing_data_source" xsi:type="string">LynxPagebuilderDesignGridDataSource</item>
+				<item name="lynx_pagebuilder_layout_listing_data_source" xsi:type="string">LynxPagebuilderLayoutGridDataSource</item>
+			</argument>
+		</arguments>
+	</type>
+    <!-- Theme settings (Model\ThemeSettings): the Theme tab fields, written to each page as CSS custom properties.
+         `var` keeps the component library's names; a new field needs its default in @theme. -->
+    <type name="OOCS\LynxPageBuilder\Model\ThemeSettings">
+        <arguments>
+            <argument name="fields" xsi:type="array">
+                <item name="color_primary" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Buttons &amp; links</item>
+                    <item name="label" xsi:type="string">Button</item>
+                    <item name="description" xsi:type="string">Fill of primary buttons, and the accent of active controls. The hover shade and the focus ring are mixed from it</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(41 84 255)</item>
+                    <item name="var" xsi:type="string">--color-primary</item>
+                </item>
+                <item name="color_primary_content" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Buttons &amp; links</item>
+                    <item name="label" xsi:type="string">Button text</item>
+                    <item name="description" xsi:type="string">Text on filled (primary) buttons</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(255 255 255)</item>
+                    <item name="var" xsi:type="string">--color-primary-content</item>
+                </item>
+                <item name="color_secondary" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Buttons &amp; links</item>
+                    <item name="label" xsi:type="string">Secondary button</item>
+                    <item name="description" xsi:type="string">Outline and text of outlined buttons (Continue, Apply, Edit)</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(84 93 99)</item>
+                    <item name="var" xsi:type="string">--color-secondary</item>
+                </item>
+                <item name="color_link" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Buttons &amp; links</item>
+                    <item name="label" xsi:type="string">Link</item>
+                    <item name="description" xsi:type="string">Links that stand on their own in text: Forgot password, View cart, a policy link, the terms next to a checkbox, and links inside a Paragraph or CMS block. The menu, product names and footer columns follow the Text color; buttons keep their own</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(41 84 255)</item>
+                    <item name="var" xsi:type="string">--color-link</item>
+                </item>
+                <item name="color_text" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Text</item>
+                    <item name="label" xsi:type="string">Text</item>
+                    <item name="description" xsi:type="string">Headings and body copy. Secondary copy — notes, captions — is this color at reduced opacity, so it follows along</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(23 32 38)</item>
+                    <item name="var" xsi:type="string">--color-base-content</item>
+                </item>
+                <item name="color_background" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Backgrounds</item>
+                    <item name="label" xsi:type="string">Page background</item>
+                    <item name="description" xsi:type="string">Behind everything; cards and fields sit on it too</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(255 255 255)</item>
+                    <item name="var" xsi:type="string">--color-base-100</item>
+                </item>
+                <item name="color_surface" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Backgrounds</item>
+                    <item name="label" xsi:type="string">Surface</item>
+                    <item name="description" xsi:type="string">Panels that sit back from the page: order summaries, table stripes, the tint behind a selected item</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(244 245 245)</item>
+                    <item name="var" xsi:type="string">--color-base-200</item>
+                </item>
+                <item name="color_border" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Backgrounds</item>
+                    <item name="label" xsi:type="string">Border</item>
+                    <item name="description" xsi:type="string">Hairlines, card borders and the outline of fields</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(223 225 226)</item>
+                    <item name="var" xsi:type="string">--color-base-300</item>
+                </item>
+                <item name="color_info" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">States</item>
+                    <item name="label" xsi:type="string">Info</item>
+                    <item name="description" xsi:type="string">Background of informational notices</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(41 84 255)</item>
+                    <item name="var" xsi:type="string">--color-info</item>
+                </item>
+                <item name="color_info_content" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">States</item>
+                    <item name="label" xsi:type="string">Info text</item>
+                    <item name="description" xsi:type="string">Text and icon on an informational notice</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(255 255 255)</item>
+                    <item name="var" xsi:type="string">--color-info-content</item>
+                </item>
+                <item name="color_success" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">States</item>
+                    <item name="label" xsi:type="string">Success</item>
+                    <item name="description" xsi:type="string">Background of success notices, and the in-stock marker</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(38 142 108)</item>
+                    <item name="var" xsi:type="string">--color-success</item>
+                </item>
+                <item name="color_success_content" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">States</item>
+                    <item name="label" xsi:type="string">Success text</item>
+                    <item name="description" xsi:type="string">Text and icon on a success notice</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(255 255 255)</item>
+                    <item name="var" xsi:type="string">--color-success-content</item>
+                </item>
+                <item name="color_warning" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">States</item>
+                    <item name="label" xsi:type="string">Warning</item>
+                    <item name="description" xsi:type="string">Background of warning notices</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(178 107 17)</item>
+                    <item name="var" xsi:type="string">--color-warning</item>
+                </item>
+                <item name="color_warning_content" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">States</item>
+                    <item name="label" xsi:type="string">Warning text</item>
+                    <item name="description" xsi:type="string">Text and icon on a warning notice</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(255 255 255)</item>
+                    <item name="var" xsi:type="string">--color-warning-content</item>
+                </item>
+                <item name="color_error" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">States</item>
+                    <item name="label" xsi:type="string">Error</item>
+                    <item name="description" xsi:type="string">Background of error notices, and the outline of an invalid field</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(215 55 63)</item>
+                    <item name="var" xsi:type="string">--color-error</item>
+                </item>
+                <item name="color_error_content" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">States</item>
+                    <item name="label" xsi:type="string">Error text</item>
+                    <item name="description" xsi:type="string">Text and icon on an error notice</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(255 255 255)</item>
+                    <item name="var" xsi:type="string">--color-error-content</item>
+                </item>
+                <item name="color_neutral" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Accents</item>
+                    <item name="label" xsi:type="string">Dark surface</item>
+                    <item name="description" xsi:type="string">The dark band behind an announcement bar, a badge or a sale marker</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(23 32 38)</item>
+                    <item name="var" xsi:type="string">--color-neutral</item>
+                </item>
+                <item name="color_neutral_content" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Accents</item>
+                    <item name="label" xsi:type="string">Dark surface text</item>
+                    <item name="description" xsi:type="string">Text on the dark surface</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(255 255 255)</item>
+                    <item name="var" xsi:type="string">--color-neutral-content</item>
+                </item>
+                <item name="color_secondary_content" xsi:type="array">
+                    <item name="group" xsi:type="string">Colors</item>
+                    <item name="section" xsi:type="string">Accents</item>
+                    <item name="label" xsi:type="string">Secondary button text</item>
+                    <item name="description" xsi:type="string">Text on a filled secondary button; the outlined variant uses the secondary colour itself</item>
+                    <item name="type" xsi:type="string">color</item>
+                    <item name="default" xsi:type="string">rgb(255 255 255)</item>
+                    <item name="var" xsi:type="string">--color-secondary-content</item>
+                </item>
+                <item name="body_scale" xsi:type="array">
+                    <item name="group" xsi:type="string">Typography</item>
+                    <item name="label" xsi:type="string">Body font scale (%)</item>
+                    <item name="description" xsi:type="string">The root text size: every size in the theme follows it, so it scales the whole storefront. 100% is 16px</item>
+                    <item name="type" xsi:type="string">number</item>
+                    <item name="default" xsi:type="string">100</item>
+                    <item name="html" xsi:type="string">font-size</item>
+                    <item name="unit" xsi:type="string">%</item>
+                    <item name="min" xsi:type="number">80</item>
+                    <item name="max" xsi:type="number">130</item>
+                    <item name="step" xsi:type="number">5</item>
+                </item>
+                <item name="heading_scale" xsi:type="array">
+                    <item name="group" xsi:type="string">Typography</item>
+                    <item name="label" xsi:type="string">Heading font scale (%)</item>
+                    <item name="description" xsi:type="string">Scales the large sizes (titles, banners) on top of the body scale; body text stays as it is</item>
+                    <item name="type" xsi:type="string">number</item>
+                    <item name="default" xsi:type="string">100</item>
+                    <item name="var" xsi:type="string">--heading-scale</item>
+                    <item name="min" xsi:type="number">80</item>
+                    <item name="max" xsi:type="number">160</item>
+                    <item name="step" xsi:type="number">5</item>
+                </item>
+                <item name="width_site" xsi:type="array">
+                    <item name="group" xsi:type="string">Layout</item>
+                    <item name="label" xsi:type="string">Site width (px)</item>
+                    <item name="description" xsi:type="string">The widest frame on the page: the header, the footer and a Group whose Content Width is Site, and what a block with Align: Wide reaches</item>
+                    <item name="type" xsi:type="string">number</item>
+                    <item name="default" xsi:type="string">1440</item>
+                    <item name="var" xsi:type="string">--width-site</item>
+                    <item name="unit" xsi:type="string">px</item>
+                    <item name="min" xsi:type="number">960</item>
+                    <item name="max" xsi:type="number">2400</item>
+                    <item name="step" xsi:type="number">10</item>
+                </item>
+                <item name="width_content" xsi:type="array">
+                    <item name="group" xsi:type="string">Layout</item>
+                    <item name="label" xsi:type="string">Content width (px)</item>
+                    <item name="description" xsi:type="string">The frame of a Group whose Content Width is Default — the cart, the account pages</item>
+                    <item name="type" xsi:type="string">number</item>
+                    <item name="default" xsi:type="string">1152</item>
+                    <item name="var" xsi:type="string">--width-content</item>
+                    <item name="unit" xsi:type="string">px</item>
+                    <item name="min" xsi:type="number">640</item>
+                    <item name="max" xsi:type="number">1920</item>
+                    <item name="step" xsi:type="number">10</item>
+                </item>
+                <item name="width_narrow" xsi:type="array">
+                    <item name="group" xsi:type="string">Layout</item>
+                    <item name="label" xsi:type="string">Narrow width (px)</item>
+                    <item name="description" xsi:type="string">The frame of a Group whose Content Width is Narrow — order confirmation, short notices</item>
+                    <item name="type" xsi:type="string">number</item>
+                    <item name="default" xsi:type="string">768</item>
+                    <item name="var" xsi:type="string">--width-narrow</item>
+                    <item name="unit" xsi:type="string">px</item>
+                    <item name="min" xsi:type="number">480</item>
+                    <item name="max" xsi:type="number">1280</item>
+                    <item name="step" xsi:type="number">10</item>
+                </item>
+                <item name="header_height" xsi:type="array">
+                    <item name="group" xsi:type="string">Layout</item>
+                    <item name="label" xsi:type="string">Header height (px)</item>
+                    <item name="description" xsi:type="string">How tall the main header bar stands from 1024px up. A floor, not a cap: a taller logo or a second row pushes it further. Smaller screens keep their own</item>
+                    <item name="type" xsi:type="string">number</item>
+                    <item name="default" xsi:type="string">80</item>
+                    <item name="var" xsi:type="string">--spacing-header</item>
+                    <item name="unit" xsi:type="string">px</item>
+                    <item name="min" xsi:type="number">48</item>
+                    <item name="max" xsi:type="number">160</item>
+                    <item name="step" xsi:type="number">2</item>
+                </item>
+                <item name="radius_box" xsi:type="array">
+                    <item name="group" xsi:type="string">Shape</item>
+                    <item name="label" xsi:type="string">Corners — boxes</item>
+                    <item name="description" xsi:type="string">Shape of cards, dialogs and notices</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">0.5rem</item>
+                    <item name="var" xsi:type="string">--radius-box</item>
+                    <item name="options" xsi:type="array">
+                        <item name="0px" xsi:type="array"><item name="value" xsi:type="string">0px</item><item name="label" xsi:type="string">0</item></item>
+                        <item name="0.25rem" xsi:type="array"><item name="value" xsi:type="string">0.25rem</item><item name="label" xsi:type="string">0.25rem</item></item>
+                        <item name="0.5rem" xsi:type="array"><item name="value" xsi:type="string">0.5rem</item><item name="label" xsi:type="string">0.5rem</item></item>
+                        <item name="1rem" xsi:type="array"><item name="value" xsi:type="string">1rem</item><item name="label" xsi:type="string">1rem</item></item>
+                        <item name="2rem" xsi:type="array"><item name="value" xsi:type="string">2rem</item><item name="label" xsi:type="string">2rem</item></item>
+                    </item>
+                </item>
+                <item name="radius_button" xsi:type="array">
+                    <item name="group" xsi:type="string">Shape</item>
+                    <item name="label" xsi:type="string">Corners — buttons</item>
+                    <item name="description" xsi:type="string">Shape of every button. A pasted theme sets buttons and fields to one radius; pick a different value here to keep them apart. At 2rem the radius passes half a button's height and the browser rounds it fully</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">0.5rem</item>
+                    <item name="var" xsi:type="string">--radius-button</item>
+                    <item name="options" xsi:type="array">
+                        <item name="0px" xsi:type="array"><item name="value" xsi:type="string">0px</item><item name="label" xsi:type="string">0</item></item>
+                        <item name="0.25rem" xsi:type="array"><item name="value" xsi:type="string">0.25rem</item><item name="label" xsi:type="string">0.25rem</item></item>
+                        <item name="0.5rem" xsi:type="array"><item name="value" xsi:type="string">0.5rem</item><item name="label" xsi:type="string">0.5rem</item></item>
+                        <item name="1rem" xsi:type="array"><item name="value" xsi:type="string">1rem</item><item name="label" xsi:type="string">1rem</item></item>
+                        <item name="2rem" xsi:type="array"><item name="value" xsi:type="string">2rem</item><item name="label" xsi:type="string">2rem</item></item>
+                    </item>
+                </item>
+                <item name="radius_field" xsi:type="array">
+                    <item name="group" xsi:type="string">Shape</item>
+                    <item name="label" xsi:type="string">Corners — fields</item>
+                    <item name="description" xsi:type="string">Shape of text fields and selects. At 2rem the radius passes half a field's height and the browser rounds it fully</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">0.5rem</item>
+                    <item name="var" xsi:type="string">--radius-field</item>
+                    <item name="options" xsi:type="array">
+                        <item name="0px" xsi:type="array"><item name="value" xsi:type="string">0px</item><item name="label" xsi:type="string">0</item></item>
+                        <item name="0.25rem" xsi:type="array"><item name="value" xsi:type="string">0.25rem</item><item name="label" xsi:type="string">0.25rem</item></item>
+                        <item name="0.5rem" xsi:type="array"><item name="value" xsi:type="string">0.5rem</item><item name="label" xsi:type="string">0.5rem</item></item>
+                        <item name="1rem" xsi:type="array"><item name="value" xsi:type="string">1rem</item><item name="label" xsi:type="string">1rem</item></item>
+                        <item name="2rem" xsi:type="array"><item name="value" xsi:type="string">2rem</item><item name="label" xsi:type="string">2rem</item></item>
+                    </item>
+                </item>
+                <item name="radius_selector" xsi:type="array">
+                    <item name="group" xsi:type="string">Shape</item>
+                    <item name="label" xsi:type="string">Corners — small controls</item>
+                    <item name="description" xsi:type="string">Shape of checkboxes; radios and badges stay round. At 0.5rem a small checkbox is already round</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">0.25rem</item>
+                    <item name="var" xsi:type="string">--radius-selector</item>
+                    <item name="options" xsi:type="array">
+                        <item name="0px" xsi:type="array"><item name="value" xsi:type="string">0px</item><item name="label" xsi:type="string">0</item></item>
+                        <item name="0.25rem" xsi:type="array"><item name="value" xsi:type="string">0.25rem</item><item name="label" xsi:type="string">0.25rem</item></item>
+                        <item name="0.5rem" xsi:type="array"><item name="value" xsi:type="string">0.5rem</item><item name="label" xsi:type="string">0.5rem</item></item>
+                        <item name="1rem" xsi:type="array"><item name="value" xsi:type="string">1rem</item><item name="label" xsi:type="string">1rem</item></item>
+                        <item name="2rem" xsi:type="array"><item name="value" xsi:type="string">2rem</item><item name="label" xsi:type="string">2rem</item></item>
+                    </item>
+                </item>
+                <item name="border_width" xsi:type="array">
+                    <item name="group" xsi:type="string">Shape</item>
+                    <item name="label" xsi:type="string">Border width</item>
+                    <item name="description" xsi:type="string">Outline thickness of buttons and fields; filled buttons keep the same size with a transparent border</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">2px</item>
+                    <item name="var" xsi:type="string">--border</item>
+                    <item name="options" xsi:type="array">
+                        <item name="0px" xsi:type="array"><item name="value" xsi:type="string">0px</item><item name="label" xsi:type="string">None</item></item>
+                        <item name="1px" xsi:type="array"><item name="value" xsi:type="string">1px</item><item name="label" xsi:type="string">1px</item></item>
+                        <item name="2px" xsi:type="array"><item name="value" xsi:type="string">2px</item><item name="label" xsi:type="string">2px</item></item>
+                    </item>
+                    <item name="values" xsi:type="array">
+                        <item name="0px" xsi:type="string">0px</item>
+                        <item name="1px" xsi:type="string">1px</item>
+                        <item name="2px" xsi:type="string">2px</item>
+                    </item>
+                </item>
+                <item name="size_field" xsi:type="array">
+                    <item name="group" xsi:type="string">Shape</item>
+                    <item name="label" xsi:type="string">Control height</item>
+                    <item name="description" xsi:type="string">How tall buttons, text fields and selects stand</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">default</item>
+                    <item name="var" xsi:type="string">--size-field</item>
+                    <item name="options" xsi:type="array">
+                        <item name="compact" xsi:type="array"><item name="value" xsi:type="string">compact</item><item name="label" xsi:type="string">Compact (36px)</item></item>
+                        <item name="default" xsi:type="array"><item name="value" xsi:type="string">default</item><item name="label" xsi:type="string">Default (40px)</item></item>
+                        <item name="large" xsi:type="array"><item name="value" xsi:type="string">large</item><item name="label" xsi:type="string">Large (44px)</item></item>
+                    </item>
+                    <item name="values" xsi:type="array">
+                        <item name="compact" xsi:type="string">0.225rem</item>
+                        <item name="default" xsi:type="string">0.25rem</item>
+                        <item name="large" xsi:type="string">0.275rem</item>
+                    </item>
+                </item>
+                <item name="size_selector" xsi:type="array">
+                    <item name="group" xsi:type="string">Shape</item>
+                    <item name="label" xsi:type="string">Small control size</item>
+                    <item name="description" xsi:type="string">Size of checkboxes, radios and toggles</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">default</item>
+                    <item name="var" xsi:type="string">--size-selector</item>
+                    <item name="options" xsi:type="array">
+                        <item name="small" xsi:type="array"><item name="value" xsi:type="string">small</item><item name="label" xsi:type="string">Small</item></item>
+                        <item name="default" xsi:type="array"><item name="value" xsi:type="string">default</item><item name="label" xsi:type="string">Default</item></item>
+                        <item name="large" xsi:type="array"><item name="value" xsi:type="string">large</item><item name="label" xsi:type="string">Large</item></item>
+                    </item>
+                    <item name="values" xsi:type="array">
+                        <item name="small" xsi:type="string">0.2rem</item>
+                        <item name="default" xsi:type="string">0.25rem</item>
+                        <item name="large" xsi:type="string">0.3rem</item>
+                    </item>
+                </item>
+                <item name="depth" xsi:type="array">
+                    <item name="group" xsi:type="string">Shape</item>
+                    <item name="label" xsi:type="string">Depth</item>
+                    <item name="description" xsi:type="string">Flat, or buttons and controls lifted with a shadow and a highlight</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">flat</item>
+                    <item name="var" xsi:type="string">--depth</item>
+                    <item name="options" xsi:type="array">
+                        <item name="flat" xsi:type="array"><item name="value" xsi:type="string">flat</item><item name="label" xsi:type="string">Flat</item></item>
+                        <item name="raised" xsi:type="array"><item name="value" xsi:type="string">raised</item><item name="label" xsi:type="string">Raised</item></item>
+                    </item>
+                    <item name="values" xsi:type="array">
+                        <item name="flat" xsi:type="string">0</item>
+                        <item name="raised" xsi:type="string">1</item>
+                    </item>
+                </item>
+                <item name="color_scheme" xsi:type="array">
+                    <item name="group" xsi:type="string">Advanced</item>
+                    <item name="label" xsi:type="string">Color scheme</item>
+                    <item name="description" xsi:type="string">Tells the browser whether this design is light or dark, so native controls, scrollbars and the autofill background match it. Set it to Dark when the Page background is dark</item>
+                    <item name="type" xsi:type="string">select</item>
+                    <item name="default" xsi:type="string">light</item>
+                    <item name="html" xsi:type="string">color-scheme</item>
+                    <item name="options" xsi:type="array">
+                        <item name="light" xsi:type="array"><item name="value" xsi:type="string">light</item><item name="label" xsi:type="string">Light</item></item>
+                        <item name="dark" xsi:type="array"><item name="value" xsi:type="string">dark</item><item name="label" xsi:type="string">Dark</item></item>
+                    </item>
+                    <item name="values" xsi:type="array">
+                        <item name="light" xsi:type="string">light</item>
+                        <item name="dark" xsi:type="string">dark</item>
+                    </item>
+                </item>
+                <!-- Raw CSS appended after the variables, for what no setting covers. -->
+                <item name="custom_css" xsi:type="array">
+                    <item name="group" xsi:type="string">Advanced</item>
+                    <item name="label" xsi:type="string">Custom CSS</item>
+                    <item name="description" xsi:type="string">Added to the end of the design's stylesheet on every page, for what no setting covers — e.g. :root{--button-focus:none} removes the focus ring of buttons. A generated theme block can be pasted here whole</item>
+                    <item name="type" xsi:type="string">textarea</item>
+                    <item name="rows" xsi:type="number">10</item>
+                    <item name="mono" xsi:type="number">1</item>
+                    <item name="default" xsi:type="string"></item>
+                    <item name="raw" xsi:type="string">1</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Pages the editor can build (first = default). Keys: label, path (content key), route (preview), sample (PreviewRoute lookup),
+         sample_data (true: previewed through Controller\Preview\Sample with the providers' sample data),
+         type, group, sort_order (Home 10, 404 11, products 20, catalog 30–49, account 70, orders 75, checkout 80+, other 90+). Other modules declare their own pages. -->
+    <type name="OOCS\LynxPageBuilder\Model\PreviewPagebuilder">
+        <arguments>
+            <argument name="pages" xsi:type="array">
+                <item name="home" xsi:type="array">
+                    <item name="sort_order" xsi:type="number">10</item>
+                    <item name="label" xsi:type="string">Home page</item>
+                    <item name="path" xsi:type="string">cms_index_index</item>
+                    <item name="route" xsi:type="string"></item>
+                </item>
+                <!-- No sample to append: this route is the 404 itself. -->
+                <item name="not_found" xsi:type="array">
+                    <item name="sort_order" xsi:type="number">11</item>
+                    <item name="label" xsi:type="string">404 page</item>
+                    <item name="path" xsi:type="string">cms_noroute_index</item>
+                    <item name="route" xsi:type="string">cms/noroute/index</item>
+                </item>
+                <item name="contact" xsi:type="array">
+                    <item name="sort_order" xsi:type="number">90</item>
+                    <item name="label" xsi:type="string">Contact us page</item>
+                    <item name="group" xsi:type="string">Other</item>
+                    <item name="path" xsi:type="string">contact_index_index</item>
+                    <item name="route" xsi:type="string">contact/index/index</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

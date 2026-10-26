@@ -1,0 +1,6 @@
+node_modules/
+
+# Local vite env (VITE_*, and the AI provider keys): per machine, never committed.
+.env
+.env.local
+.env.*.local

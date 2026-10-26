@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<!-- The design grid's data source lives in etc/di.xml: an adminhtml-scoped `collections` argument would replace core's. -->
+    <!-- Editor extensions (Api\ExtensionInterface, docs/pagebuilder-extensions.md). Every module declares its item in
+         etc/adminhtml/di.xml: an adminhtml item would replace items declared globally. -->
+    <type name="OOCS\LynxPageBuilder\Model\Extensions">
+        <arguments>
+            <argument name="extensions" xsi:type="array"/>
+        </arguments>
+    </type>
+</config>

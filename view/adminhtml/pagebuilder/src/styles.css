@@ -1,0 +1,93 @@
+@import "tailwindcss/theme.css";
+/* The editor page drops the admin stylesheets, so the reset the ui/ components assume can be global */
+@import "tailwindcss/preflight.css";
+@import "tailwindcss/utilities.css";
+@import "tw-animate-css";
+
+/* ui/ ships dark: classes; the editor is light only, so they wait for a .dark that never comes rather than the OS setting */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ui/ tokens: on :root, not on #lynx-pagebuilder, so popovers and dialogs portalled to <body> get them too */
+:root {
+  --radius: 0.5rem;
+  --background: var(--color-white);
+  --foreground: var(--color-zinc-950);
+  --card: var(--color-white);
+  --card-foreground: var(--color-zinc-950);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-zinc-950);
+  --primary: var(--color-zinc-900);
+  --primary-foreground: var(--color-zinc-50);
+  --secondary: var(--color-zinc-100);
+  --secondary-foreground: var(--color-zinc-900);
+  --muted: var(--color-zinc-100);
+  --muted-foreground: var(--color-zinc-500);
+  --accent: var(--color-zinc-100);
+  --accent-foreground: var(--color-zinc-900);
+  --destructive: var(--color-red-600);
+  --border: var(--color-zinc-200);
+  --input: var(--color-zinc-200);
+  --ring: var(--color-zinc-950);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/* Unlayered like the reset above, which would otherwise leave every border currentColor */
+*, ::before, ::after { border-color: var(--border); }
+body { background: var(--background); color: var(--foreground); }
+/* Tailwind 4's reset leaves buttons with the default cursor, and the ui/ components do not add one */
+button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
+
+/* Added to DOM by vuedraggable at drag time — cannot use Vue :class binding */
+.pb-ghost {
+  opacity: 0.4 !important;
+  background-color: var(--color-zinc-200) !important;
+  border: 1px dashed var(--color-zinc-400) !important;
+  border-radius: 6px !important;
+}
+
+/* Thin scrollbars for scrollable panels */
+/* Thin scrollbar, thumb only on hover: standard properties for Firefox and Chrome 121+, pseudo-elements for the rest. */
+.pb-scroll { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.pb-scroll:hover { scrollbar-color: var(--color-zinc-300) transparent; }
+.pb-scroll::-webkit-scrollbar { width: 6px; }
+.pb-scroll::-webkit-scrollbar-track { background: transparent; }
+.pb-scroll::-webkit-scrollbar-thumb { background: transparent; border-radius: 3px; }
+.pb-scroll:hover::-webkit-scrollbar-thumb { background: var(--color-zinc-300); }
+
+/* Preview frame decoration fade */
+.pb-fade-enter-active, .pb-fade-leave-active { transition: opacity .25s; }
+.pb-fade-enter-from, .pb-fade-leave-to { opacity: 0; }
+
+/* The color setting's picker (settings/FieldColor.vue, vanilla-colorful): sized to the
+   panel and given the editor's corners through the element's own parts. */
+.lynx-color-picker { width: 100%; height: 170px; }
+.lynx-color-picker::part(saturation) { border-radius: 6px 6px 0 0; }
+.lynx-color-picker::part(hue) { flex: 0 0 14px; }
+.lynx-color-picker::part(alpha) { flex: 0 0 14px; border-radius: 0 0 6px 6px; }
+.lynx-color-picker::part(saturation-pointer),
+.lynx-color-picker::part(hue-pointer),
+.lynx-color-picker::part(alpha-pointer) { width: 18px; height: 18px; }

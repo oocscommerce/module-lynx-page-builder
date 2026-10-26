@@ -1,0 +1,57 @@
+<?php
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var \OOCS\LynxPageBuilder\Block\Adminhtml\PageBuilder $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<script>
+    window.__lynxPageBuilder = {
+        layout: <?= /* @noEscape */ $block->getInitialLayoutJson() ?>,
+        components: <?= /* @noEscape */ $block->getAvailableComponentsJson() ?>,
+        registeredComponents: <?= /* @noEscape */ $block->getRegisteredComponentsJson() ?>,
+        scopeOptions: <?= /* @noEscape */ $block->getScopeOptionsJson() ?>,
+        currentScope: '<?= $escaper->escapeJs($block->getCurrentScopeValue()) ?>',
+        pageOptions: <?= /* @noEscape */ $block->getPageOptionsJson() ?>,
+        designOptions: <?= /* @noEscape */ $block->getDesignOptionsJson() ?>,
+        currentPage: '<?= $escaper->escapeJs($block->getCurrentPageCode()) ?>',
+        saveUrl: '<?= $escaper->escapeUrl($block->getSaveUrl()) ?>',
+        canSave: <?= $block->canSave() ? 'true' : 'false' ?>,
+        themeSettings: <?= /* @noEscape */ $block->getThemeSettingsJson() ?>,
+        pageTitle: '<?= $escaper->escapeJs($block->getPageTitle()) ?>',
+        editableZones: <?= /* @noEscape */ $block->getEditableZonesJson() ?>,
+        canEditTheme: <?= $block->canEditTheme() ? 'true' : 'false' ?>,
+        exitUrl: '<?= $escaper->escapeUrl($block->getExitUrl()) ?>',
+        previewUrl: '<?= $escaper->escapeUrl($block->getPageBuilderPreviewUrl()) ?>',
+        previewToken: '<?= $escaper->escapeJs($block->getPageBuilderPreviewToken()) ?>',
+        previewRoute: '<?= $escaper->escapeJs($block->getPreviewRoute()) ?>',
+        previewStoreCode: '<?= $escaper->escapeJs($block->getPreviewStoreCode()) ?>',
+        framePages: <?= /* @noEscape */ $block->getFramePagesJson() ?>,
+        frameEditorUrl: '<?= $escaper->escapeUrl($block->getFrameEditorUrl()) ?>',
+        currentTarget: <?= /* @noEscape */ $block->getCurrentTargetJson() ?>,
+        themeNotice: '<?= $escaper->escapeJs($block->getThemeNotice()) ?>',
+        mediaContentsUrl: '<?= $escaper->escapeUrl($block->getMediaContentsUrl()) ?>',
+        mediaUploadUrl: '<?= $escaper->escapeUrl($block->getMediaUploadUrl()) ?>',
+        mediaFolderUrl: '<?= $escaper->escapeUrl($block->getMediaFolderUrl()) ?>',
+        mediaBaseUrl: '<?= $escaper->escapeUrl($block->getMediaBaseUrl()) ?>',
+        exportFilename: '<?= $escaper->escapeJs($block->getExportFilename()) ?>',
+        extensions: <?= /* @noEscape */ $block->getExtensionsJson() ?>,
+        share: <?= /* @noEscape */ $block->getShareJson() ?>,
+    };
+</script>
+
+<?php /* The block icons (Phosphor, emitted by the workspace build beside the bundle). */ ?>
+<?php $iconsCss = $block->getViewFileUrl('OOCS_LynxPageBuilder::js/pagebuilder/phosphor.min.css'); ?>
+<link rel="stylesheet" href="<?= $escaper->escapeUrl($iconsCss) ?>">
+<?php $editorCss = $block->getViewFileUrl('OOCS_LynxPageBuilder::js/pagebuilder/pagebuilder.min.css'); ?>
+<link rel="stylesheet" href="<?= $escaper->escapeUrl($editorCss) ?>">
+<div id="lynx-pagebuilder"></div>
+<?php /* Before any module script: one copy of Vue and of the editor's stores for the editor and its extensions. */ ?>
+<script type="importmap">{"imports":{
+    "vue":"<?= $escaper->escapeUrl($block->getVueUrl()) ?>",
+    "@pagebuilder/api":"<?= $escaper->escapeUrl($block->getApiUrl()) ?>"
+}}</script>
+<?php $editorJs = $block->getViewFileUrl('OOCS_LynxPageBuilder::js/pagebuilder/lynx-pagebuilder.min.js'); ?>
+<script type="module" src="<?= $escaper->escapeUrl($editorJs) ?>"></script>

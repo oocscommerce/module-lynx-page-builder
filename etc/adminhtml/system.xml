@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="oocs_lynx" translate="label" sortOrder="200">
+            <label>Lynx</label>
+        </tab>
+        <!-- Which design a storefront renders is a storefront setting: its own section, scoped Default/website/store view. -->
+        <section id="lynx_design" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Theme Settings</label>
+            <tab>oocs_lynx</tab>
+            <resource>OOCS_LynxPageBuilder::config_pagebuilder</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Active Design</label>
+                    <source_model>OOCS\LynxPageBuilder\Model\Config\Source\Design</source_model>
+                    <comment>The design this scope renders with. Designs are built in Lynx &gt; Designs.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

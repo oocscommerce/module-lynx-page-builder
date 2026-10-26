@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="OOCS_LynxPageBuilder::lynx"
+             title="Lynx"
+             module="OOCS_LynxPageBuilder"
+             sortOrder="51"
+             resource="OOCS_LynxPageBuilder::manage"/>
+        <!-- The editor opens from a grid row, not a menu item: it needs a design to open. -->
+        <add id="OOCS_LynxPageBuilder::design"
+             title="Designs"
+             module="OOCS_LynxPageBuilder"
+             parent="OOCS_LynxPageBuilder::lynx"
+             sortOrder="10"
+             action="lynxpagebuilder/design/index"
+             resource="OOCS_LynxPageBuilder::manage"/>
+        <add id="OOCS_LynxPageBuilder::setting"
+             title="Settings"
+             module="OOCS_LynxPageBuilder"
+             parent="OOCS_LynxPageBuilder::lynx"
+             sortOrder="20"
+             action="adminhtml/system_config/edit/section/lynx_design"
+             resource="OOCS_LynxPageBuilder::config_pagebuilder"/>
+    </menu>
+</config>

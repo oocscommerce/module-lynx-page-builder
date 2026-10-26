@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="empty"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="css/styles-old.css"/>
+        <remove src="css/styles.css"/>
+        <remove src="jquery/jstree/themes/default/style.css"/>
+        <remove src="jquery/uppy/dist/uppy-custom.css"/>
+        <remove src="requirejs/require.js"/>
+    </head>
+    <body>
+        <referenceContainer name="main.top" remove="true"/>
+        <referenceContainer name="menu.wrapper" remove="true"/>
+        <referenceContainer name="page.main.actions" remove="true"/>
+        <referenceContainer name="header" remove="true"/>
+        <referenceContainer name="after.body.start" remove="true"/>
+        <referenceContainer name="footer" remove="true"/>
+        <referenceContainer name="root">
+            <block class="OOCS\LynxPageBuilder\Block\Adminhtml\PageBuilder" name="lynx.pagebuilder" template="OOCS_LynxPageBuilder::pagebuilder.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

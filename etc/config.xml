@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <!-- Which design a store runs; the id CreateDefaultDesign installs, so every store has one. -->
+        <lynx_design>
+            <general>
+                <active>1</active>
+            </general>
+        </lynx_design>
+    </default>
+</config>

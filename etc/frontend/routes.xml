@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<!-- frontName `lynx` is shared with OOCS_LynxCheckout; this module adds preview/stop, preview/theme and preview/sample. -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="lynx" frontName="lynx">
+            <module name="OOCS_LynxPageBuilder"/>
+        </route>
+    </router>
+</config>

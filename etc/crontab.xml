@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="lynx_pagebuilder_share_cleanup" instance="OOCS\LynxPageBuilder\Cron\CleanShares" method="execute">
+            <!-- Daily, at night: an expired link opens nothing, it only takes up a row. -->
+            <schedule>0 3 * * *</schedule>
+        </job>
+    </group>
+</config>

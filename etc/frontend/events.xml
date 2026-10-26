@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="layout_load_before">
+        <observer name="oocs_lynxpagebuilder_add_preview_layout_handle"
+                  instance="OOCS\LynxPageBuilder\Observer\AddPreviewLayoutHandle"/>
+    </event>
+    <!-- Adds the preview bridge after the zones are read, so it lands on the page's real content. -->
+    <event name="lynx_pagebuilder_layout_resolve_after">
+        <observer name="oocs_lynxpagebuilder_add_preview_bridge"
+                  instance="OOCS\LynxPageBuilder\Observer\AddPreviewBridge"/>
+    </event>
+</config>

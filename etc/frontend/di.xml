@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Frontend only: in the admin the editor posts its own draft to the preview route. -->
+    <type name="OOCS\LynxInertia\Service\InertiaService">
+        <!-- Preview first: it builds the page from the posted draft, and the next plugin then leaves it alone. -->
+        <plugin name="oocs_lynxpagebuilder_preview_layout_page"
+                type="OOCS\LynxPageBuilder\Plugin\PreviewLayoutPage" sortOrder="5" disabled="false"/>
+        <plugin name="oocs_lynxpagebuilder_resolve_layout_page"
+                type="OOCS\LynxPageBuilder\Plugin\ResolveLayoutPage" sortOrder="10" disabled="false"/>
+    </type>
+    <!-- Full page cache tags of the pages built out of stored layouts; see the plugin. -->
+    <type name="OOCS\LynxPageBuilder\Api\LayoutRepositoryInterface">
+        <plugin name="oocs_lynxpagebuilder_layout_cache_tags"
+                type="OOCS\LynxPageBuilder\Plugin\LayoutCacheTags" sortOrder="10" disabled="false"/>
+    </type>
+    <!-- A preview is never server rendered: the draft exists only in the posting request. -->
+    <type name="OOCS\LynxInertia\Service\SsrGate">
+        <plugin name="oocs_lynxpagebuilder_disable_ssr_in_preview"
+                type="OOCS\LynxPageBuilder\Plugin\DisableSsrInPreview" sortOrder="10" disabled="false"/>
+    </type>
+    <!-- Keeps the full page cache from answering a preview with the live page; see the plugin. -->
+    <type name="Magento\Framework\App\ActionInterface">
+        <plugin name="oocs_lynxpagebuilder_preview_http_context"
+                type="OOCS\LynxPageBuilder\Plugin\PreviewHttpContext" sortOrder="5" disabled="false"/>
+    </type>
+    <!-- Lets the editor frame a storefront on another origin while previewing; see the plugin. -->
+    <type name="Magento\Framework\App\Response\HeaderProvider\XFrameOptions">
+        <plugin name="oocs_lynxpagebuilder_preview_frame_ancestors"
+                type="OOCS\LynxPageBuilder\Plugin\PreviewFrameAncestors" sortOrder="10" disabled="false"/>
+    </type>
+    <type name="Magento\Csp\Api\CspRendererInterface">
+        <plugin name="oocs_lynxpagebuilder_preview_frame_ancestors"
+                type="OOCS\LynxPageBuilder\Plugin\PreviewFrameAncestors" sortOrder="10" disabled="false"/>
+    </type>
+    <!-- Before the default router (100) only: /lynx_pagebuilder/* previews routes no real router claimed. -->
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="lynx_pagebuilder_preview" xsi:type="array">
+                    <item name="class" xsi:type="string">OOCS\LynxPageBuilder\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">90</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- \Proxy: the router is created for every request no earlier router claimed (404s too), the pages only for a preview. -->
+    <type name="OOCS\LynxPageBuilder\Controller\Router">
+        <arguments>
+            <argument name="previewPagebuilder" xsi:type="object">OOCS\LynxPageBuilder\Model\PreviewPagebuilder\Proxy</argument>
+        </arguments>
+    </type>
+</config>

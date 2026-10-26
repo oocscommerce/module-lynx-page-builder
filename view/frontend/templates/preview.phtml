@@ -1,0 +1,33 @@
+<?php
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+$stopUrl = $block->getUrl('lynx/preview/stop');
+// Empty when the previewed design was deleted
+$design = (string) $block->getViewModel()->getName();
+$styleUrl = $block->getViewFileUrl('OOCS_LynxPageBuilder::css/preview-pill.css');
+$scriptUrl = $block->getViewFileUrl('OOCS_LynxPageBuilder::js/preview-pill.js');
+?>
+<link rel="stylesheet" href="<?= $escaper->escapeUrl($styleUrl) ?>">
+<?php /* A deleted design leaves every page empty: the pill says why */ ?>
+<div class="lynx-preview-pill">
+    <span><?= $escaper->escapeHtml(__('Preview mode')) ?></span>
+    <?php if ($design === ''): ?>
+        <?= $escaper->escapeHtml(__('this design was deleted, so the page is empty')) ?>
+    <?php else: ?>
+        <b title="<?= $escaper->escapeHtmlAttr($design) ?>"><?= $escaper->escapeHtml($design) ?></b>
+    <?php endif; ?>
+    <?php /* Filled from the lynx_preview_until cookie: the markup is cached per design */ ?>
+    <time class="lynx-preview-left" hidden
+          data-left="<?= $escaper->escapeHtmlAttr(__('%1 left')) ?>"
+          data-hm="<?= $escaper->escapeHtmlAttr(__('%1h %2m')) ?>"
+          data-m="<?= $escaper->escapeHtmlAttr(__('%1m')) ?>"></time>
+    <a href="<?= $escaper->escapeUrl($stopUrl) ?>"><?= $escaper->escapeHtml(__('Exit preview')) ?></a>
+</div>
+<?php /* Not deferred: in the editor's frame the pill must go before it is painted */ ?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', ['src' => $scriptUrl], null, false) ?>

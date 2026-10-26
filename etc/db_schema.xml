@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<!--
+/**
+ * Copyright 2026 Adobe
+ * All Rights Reserved.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <!-- A design is a set of layouts; which one a store runs is config lynx_design/general/active, so no default flag. -->
+    <table name="lynx_pagebuilder_design" resource="default" engine="innodb" comment="Lynx Pagebuilder Design">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true"
+                comment="ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Name"/>
+        <!-- What this design is for, in the admin's own words. -->
+        <column xsi:type="text" name="description" nullable="true" comment="Description"/>
+        <!-- Set on the shipped design: the editor opens it but does not save, and it cannot be deleted. -->
+        <column xsi:type="boolean" name="readonly" nullable="false" default="false" comment="Read Only"/>
+        <!-- Theme settings (Model\ThemeSettings) as JSON, always a full set. -->
+        <column xsi:type="text" name="settings" nullable="false" comment="Theme Settings"/>
+        <!-- Parent design ids in priority order, one level only; NULL or [] stands alone. No foreign key. -->
+        <column xsi:type="json" name="parents" nullable="true" comment="Parent Designs"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false"
+                default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false"
+                default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <!-- Password-protected preview link for someone without an admin login. Token (sha256) and password (encryptor hash)
+         are stored hashed; revoking deletes the row. -->
+    <table name="lynx_pagebuilder_share" resource="default" engine="innodb" comment="Lynx Pagebuilder Share Link">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="design_id" unsigned="true" nullable="false" comment="Design ID"/>
+        <column xsi:type="varchar" name="token_hash" nullable="false" length="64" comment="SHA-256 of the URL token"/>
+        <column xsi:type="varchar" name="password_hash" nullable="false" length="255" comment="Password Hash"/>
+        <column xsi:type="timestamp" name="expires_at" nullable="false" comment="Expires At"/>
+        <!-- Wrong passwords in a row; five lock the link until locked_until. -->
+        <column xsi:type="smallint" name="attempts" unsigned="true" nullable="false" default="0" comment="Failed Attempts"/>
+        <column xsi:type="timestamp" name="locked_until" nullable="true" comment="Locked Until"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false"
+                default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="LYNX_PAGEBUILDER_SHARE_TOKEN_HASH">
+            <column name="token_hash"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="LYNX_PAGEBUILDER_SHARE_DESIGN_ID_LYNX_PAGEBUILDER_DESIGN_ID"
+                    table="lynx_pagebuilder_share" column="design_id"
+                    referenceTable="lynx_pagebuilder_design" referenceColumn="id" onDelete="CASCADE"/>
+    </table>
+    <table name="lynx_pagebuilder_layout" resource="default" engine="innodb" comment="Lynx Pagebuilder">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true"
+                comment="ID"/>
+        <column xsi:type="int" name="design_id" unsigned="true" nullable="false" identity="false"
+                comment="Design ID"/>
+        <column xsi:type="varchar" name="path" nullable="false" length="255" comment="Path"/>
+        <column xsi:type="mediumtext" name="value" nullable="true" comment="Value"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false"
+                default="CURRENT_TIMESTAMP" comment="Updated At" />
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <!-- One layout per path per design: 'header', 'footer', or a full action name. -->
+        <constraint xsi:type="unique" referenceId="LYNX_PB_LAYOUT_DESIGN_ID_PATH">
+            <column name="design_id"/>
+            <column name="path"/>
+        </constraint>
+        <!-- A layout has no meaning without the design it belongs to. -->
+        <constraint xsi:type="foreign" referenceId="LYNX_PB_LAYOUT_DESIGN_ID_LYNX_PB_DESIGN_ID"
+                    table="lynx_pagebuilder_layout" column="design_id"
+                    referenceTable="lynx_pagebuilder_design" referenceColumn="id" onDelete="CASCADE"/>
+    </table>
+</schema>

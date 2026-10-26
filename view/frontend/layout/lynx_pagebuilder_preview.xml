@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<!-- Added on top of the previewed page's handles by Observer\AddPreviewLayoutHandle. -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="lynx.after.body.start">
+            <!-- Cacheable: PreviewHttpContext keys preview pages apart, the draft is posted, saving purges by layout tags. -->
+            <block class="Magento\Framework\View\Element\Template" name="lynx.preview.bridge"
+                   template="OOCS_LynxPageBuilder::preview.phtml" before="-">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">OOCS\LynxPageBuilder\ViewModel\PreviewDesign</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
